@@ -25,6 +25,12 @@
       color: white;
     }
 
+    .video-js {
+      border: none !important;
+      outline: none !important;
+      background-color: transparent !important;
+    }
+
     .glass-header {
       background: rgba(15, 16, 20, 0.8);
       backdrop-filter: blur(10px);
@@ -95,16 +101,18 @@
   </div>
 
   <!-- Video Player -->
-  <div class="flex justify-center mt-6 px-4">
-    <div class="w-full max-w-5xl">
-      <video
-        id="videoPlayer"
-        class="video-js vjs-theme-city w-full aspect-video rounded-lg bg-black shadow-xl"
-        controls
-        preload="auto"
-        poster="assets/logotvgonx.png"
-        data-setup='{}'>
-      </video>
+  <div class="flex justify-center mt-10 px-4">
+    <div class="w-full max-w-4xl">
+      <div class="aspect-video rounded-lg shadow-xl bg-black overflow-hidden">
+        <video
+          id="videoPlayer"
+          class="video-js vjs-theme-city w-full h-full"
+          controls
+          preload="auto"
+          poster="assets/logotvgonx.png"
+          data-setup='{}'>
+        </video>
+      </div>
     </div>
   </div>
 
