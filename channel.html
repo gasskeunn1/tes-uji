@@ -1,107 +1,104 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GameOnX Channel</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameOnX - Carousel Channel</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      background-color: #0f1014;
-      color: white;
-      font-family: 'Inter', sans-serif;
+    .carousel-container {
+      position: relative;
     }
-    .scroll-container {
-      display: flex;
+    .carousel-track {
       overflow-x: auto;
       scroll-behavior: smooth;
+      display: flex;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
     }
-    .scroll-container::-webkit-scrollbar {
+    .carousel-track::-webkit-scrollbar {
       display: none;
     }
-    .scroll-button {
-      background-color: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(4px);
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      padding: 0.75rem;
+      border-radius: 9999px;
+      transition: background 0.3s;
+    }
+    .carousel-button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .carousel-left { left: 0.5rem; }
+    .carousel-right { right: 0.5rem; }
+
+    .carousel-item {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      transition: transform 0.3s ease;
+    }
+    .carousel-item:hover {
+      transform: scale(1.05);
     }
   </style>
 </head>
-<body class="min-h-screen">
-  <!-- Header -->
-  <div class="px-4 pt-4">
-    <header class="flex justify-between items-center px-4 py-3 bg-[#1c1e24] rounded-xl shadow-md">
-      <a href="/" class="flex items-center gap-2">
-        <img src="assets/gameonx logo 3.png" alt="GameOnX Logo" class="h-10 sm:h-12 hover:opacity-80 transition" />
-      </a>
-      <div class="flex gap-2 text-sm">
-        <a href="https://chat.whatsapp.com/L9pViyD35Zq439t75avxq8" target="_blank" class="bg-[#2e2f38] hover:bg-[#3b3d48] text-white px-4 py-1 rounded font-semibold">Join Grup</a>
-        <a href="https://sociabuzz.com/fiqaz/donate" target="_blank" class="bg-[#2e2f38] hover:bg-[#3b3d48] text-white px-4 py-1 rounded font-semibold">Sawer</a>
-      </div>
-    </header>
+<body class="bg-[#0a1a2f] text-white font-sans p-4">
+  <div class="text-center mb-8">
+    <h1 class="text-2xl font-bold">Channel TV - Carousel per Kategori</h1>
   </div>
 
-  <!-- Iframe Player -->
-  <div class="w-full px-4 max-w-6xl mx-auto mt-6 mb-6">
-    <div class="rounded-lg overflow-hidden shadow-lg">
-      <iframe id="iframePlayer" allowfullscreen allow="encrypted-media" class="w-full aspect-video border-none rounded-lg"></iframe>
-    </div>
-  </div>
+  <div id="channelCarousels" class="space-y-12"></div>
 
-  <!-- Channel Carousels -->
-  <div id="carousels" class="space-y-10 px-4 max-w-7xl mx-auto mb-20"></div>
-
-  <!-- Script -->
   <script>
-    const categories = ["Sport", "Movie", "Entertainment", "News", "Kids", "Music"];
+    async function loadChannels() {
+      const res = await fetch("data/iframes.json");
+      const data = await res.json();
 
-    fetch("data/iframes.json")
-      .then(res => res.json())
-      .then(channels => {
-        const carouselsContainer = document.getElementById("carousels");
-        categories.forEach(category => {
-          const filtered = channels.filter(c => c.category === category);
-          if (filtered.length === 0) return;
+      const grouped = {};
+      data.forEach(item => {
+        if (!grouped[item.category]) grouped[item.category] = [];
+        grouped[item.category].push(item);
+      });
 
-          const section = document.createElement("section");
-          section.innerHTML = `
-            <div class="mb-2 flex justify-between items-center">
-              <h2 class="text-xl font-semibold">${category}</h2>
-              <div class="flex gap-2">
-                <button onclick="scrollLeft('${category}')" class="scroll-button p-1 rounded-full">⬅️</button>
-                <button onclick="scrollRight('${category}')" class="scroll-button p-1 rounded-full">➡️</button>
-              </div>
-            </div>
-            <div id="scroll-${category}" class="scroll-container gap-4 pb-2">
-              ${filtered.map(channel => `
-                <div onclick="play('${channel.src}')" class="min-w-[160px] max-w-[160px] cursor-pointer flex-shrink-0">
-                  <img src="${channel.poster}" alt="${channel.name}" class="rounded-md w-full aspect-video object-cover" />
-                  <h6 class="text-sm mt-1 text-center truncate">${channel.name}</h6>
+      const container = document.getElementById("channelCarousels");
+      container.innerHTML = "";
+
+      for (const [category, channels] of Object.entries(grouped)) {
+        const section = document.createElement("div");
+        section.innerHTML = `
+          <h2 class="text-xl font-semibold mb-2">${category}</h2>
+          <div class="carousel-container">
+            <button class="carousel-button carousel-left" onclick="scrollLeft(this)">❮</button>
+            <div class="carousel-track gap-4 pb-2">
+              ${channels.map(channel => `
+                <div class="carousel-item min-w-[180px] max-w-[180px] bg-[#161b22] rounded-lg overflow-hidden border border-white/10 hover:border-white cursor-pointer">
+                  <img src="${channel.poster}" alt="${channel.name}" class="w-full h-28 object-cover" />
+                  <h6 class="text-xs text-center p-1 truncate">${channel.name}</h6>
                 </div>
               `).join('')}
             </div>
-          `;
-          carouselsContainer.appendChild(section);
-
-          // Set default iframe to first channel found
-          if (!document.getElementById("iframePlayer").src && filtered[0]) {
-            const firstSrc = filtered[0].src.startsWith("//") ? "https:" + filtered[0].src : filtered[0].src;
-            document.getElementById("iframePlayer").src = firstSrc;
-          }
-        });
-      });
-
-    function play(src) {
-      const iframe = document.getElementById("iframePlayer");
-      iframe.src = src.startsWith("//") ? "https:" + src : src;
-      window.scrollTo({ top: 0, behavior: "smooth" });
+            <button class="carousel-button carousel-right" onclick="scrollRight(this)">❯</button>
+          </div>
+        `;
+        container.appendChild(section);
+      }
     }
 
-    function scrollLeft(category) {
-      document.getElementById("scroll-" + category).scrollBy({ left: -400, behavior: 'smooth' });
+    function scrollLeft(button) {
+      const track = button.nextElementSibling;
+      track.scrollLeft -= 300;
     }
 
-    function scrollRight(category) {
-      document.getElementById("scroll-" + category).scrollBy({ left: 400, behavior: 'smooth' });
+    function scrollRight(button) {
+      const track = button.previousElementSibling;
+      track.scrollLeft += 300;
     }
+
+    loadChannels();
   </script>
 </body>
 </html>
