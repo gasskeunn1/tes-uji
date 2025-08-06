@@ -2,27 +2,32 @@
   {
     "name": "Bein Sports USA",
     "poster": "https://assets-us-01.kc-usercontent.com/31dbcbc6-da4c-0033-328a-d7621d0fa726/1318873e-8501-4f79-bb69-182d741cf9ad/beIN%20SPORTS%20Portada.jpg?ver=03-06-2025?w=3840&q=75",
-    "src": "https://kleanplay.shop/embed/afdb73c451239369681c5e34207bf17a"
+    "src": "https://kleanplay.shop/embed/afdb73c451239369681c5e34207bf17a",
+    "category": "Sport"    
   },  
   {
     "name": "BeIN Sports 1",
     "poster": "https://stmify.com/wp-content/uploads/2025/01/472-s-1024x576.webp",
-    "src": "//cdn.stmify.com/embed-free.php?id=Bein_Sports_1_US"
+    "src": "//cdn.stmify.com/embed-free.php?id=Bein_Sports_1_US",
+    "category": "Sport"   
   },
   {
     "name": "BeIN Sports 2",
     "poster": "https://stmify.com/wp-content/uploads/2025/01/473-s-1024x576.webp",
-    "src": "//cdn.stmify.com/embed-free.php?id=Bein_Sports_2_US"
+    "src": "//cdn.stmify.com/embed-free.php?id=Bein_Sports_2_US",
+    "category": "Sport"
   },  
   {
     "name": "BeIN Sports 3",
     "poster": "https://stmify.com/wp-content/uploads/2025/01/474-s-1024x576.webp",
-    "src": "//cdn.stmify.com/embed-free.php?id=Bein_Sports_3_US"
+    "src": "//cdn.stmify.com/embed-free.php?id=Bein_Sports_3_US",
+    "category": "Sport"
   },  
   {
     "name": "CBS Sports Network",
     "poster": "https://file.garden/aEH73g2_nCZCUuwA/cbssports.png",
-    "src": "https://kleanplay.shop/embed/kD4hG2fW9pA7uN1bS8mL5yQ0cX6oZr"
+    "src": "https://kleanplay.shop/embed/kD4hG2fW9pA7uN1bS8mL5yQ0cX6oZr",
+    "category": "Sport"
   },
   {
     "name": "CBS Sports Golazo Network",
