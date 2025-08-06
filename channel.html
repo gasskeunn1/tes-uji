@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameOnX Channel</title>
+  <meta name="description" content="Tonton live streaming voli di GameOnX.">
+  <meta property="og:image" content="https://gameonx.my.id/assets/preview.jpg">
+  <meta property="og:url" content="https://gameonx.my.id">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.ico" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/inter/index.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    body {
+      font-family: 'InterVariable', sans-serif;
+      background-color: #0f1014;
+      color: white;
+    }
+
+    .glass-header {
+      background: rgba(15, 16, 20, 0.8);
+      backdrop-filter: blur(10px);
+    }
+
+    .channel-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .channel-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <div class="px-4 pt-4">
+    <header class="glass-header sticky top-0 z-50 flex justify-between items-center px-4 py-4 rounded-md shadow-md">
+      <a href="/">
+        <img src="assets/gameonx logo 3.png" alt="GameOnX Logo" class="h-10 sm:h-12 hover:opacity-80 transition" />
+      </a>
+      <div class="flex gap-3 text-sm">
+        <a href="https://chat.whatsapp.com/L9pViyD35Zq439t75avxq8" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-4 py-1 rounded">Join Grup</a>
+        <a href="https://sociabuzz.com/fiqaz/donate" target="_blank" class="bg-purple-600 hover:bg-purple-500 px-4 py-1 rounded">Sawer</a>
+      </div>
+    </header>
+  </div>
+
+  <!-- Judul -->
+  <div class="text-center mt-6 mb-3">
+    <div class="inline-block text-lg font-semibold px-4 py-1 rounded bg-gradient-to-r from-indigo-700 to-blue-600 shadow">
+      📺 CHANNEL TV SPORT
+    </div>
+  </div>
+
+  <!-- Player -->
+  <div class="max-w-5xl mx-auto mt-4 mb-6 rounded-lg overflow-hidden shadow-xl">
+    <iframe id="iframePlayer" allowfullscreen allow="encrypted-media" class="w-full aspect-video border-none rounded-lg"></iframe>
+  </div>
+
+  <!-- Daftar Channel -->
+  <div id="channelList" class="max-w-screen-xl mx-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-5 px-4 mb-16"></div>
+
+  <!-- Donasi -->
+  <div class="flex justify-center px-4">
+    <div class="bg-white p-4 rounded-lg shadow-md text-center">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://sociabuzz.com/fiqaz/support" alt="QR Donasi" class="mx-auto mb-3" />
+      <p class="text-black font-semibold">Support / Sawer</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center text-xs text-gray-500 mt-auto py-4 bg-[#0a0f1c]">
+    © 2025 GameOnX
+  </footer>
+
+  <!-- Tombol Kembali ke Beranda -->
+  <a href="/" class="fixed bottom-5 right-5 z-50 bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700 transition" title="Beranda">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M4 10v10a1 1 0 001 1h5m4 0h5a1 1 0 001-1V10" />
+    </svg>
+  </a>
+
+  <script>
+    fetch("data/iframes.json")
+      .then(res => res.json())
+      .then(channels => {
+        const container = document.getElementById("channelList");
+        const iframe = document.getElementById("iframePlayer");
+
+        channels.forEach((channel, index) => {
+          const card = document.createElement("div");
+          card.className = `
+            bg-[#161b22] rounded-xl overflow-hidden shadow-sm cursor-pointer 
+            hover:border-white hover:shadow-md border border-white/10 
+            channel-card flex flex-col items-center aspect-[16/9] w-full max-w-[180px]
+          `;
+
+          card.innerHTML = `
+            <img src="${channel.poster}" alt="${channel.name}" class="w-full h-full object-cover" />
+            <h6 class="text-[10px] text-white/80 text-center mt-1 truncate w-full">${channel.name}</h6>
+          `;
+
+          card.onclick = () => {
+            let src = channel.src.startsWith("//") ? "https:" + channel.src : channel.src;
+            iframe.src = src;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+
+          container.appendChild(card);
+
+          if (index === 0) {
+            let defaultSrc = channel.src.startsWith("//") ? "https:" + channel.src : channel.src;
+            iframe.src = defaultSrc;
+          }
+        });
+      })
+      .catch(error => {
+        document.getElementById("channelList").innerHTML = `<div class='text-red-500 text-center'>❌ Gagal memuat channel.</div>`;
+        console.error(error);
+      });
+  </script>
+</body>
+</html>
