@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameOnX</title>
+
+  <meta name="description" content="Tonton live streaming voli di GameOnX.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/inter@latest/index.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'InterVariable', sans-serif;
+      background-color: #0f1014;
+      color: white;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card {
+      transition: transform 0.3s ease;
+    }
+
+    .glass-header {
+      background: rgba(15, 16, 20, 0.8);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="glass-header sticky top-0 z-50 flex justify-between items-center px-6 py-4 shadow-md">
+    <a href="/">
+      <img src="assets/gameonx logo 3.png" alt="GameOnX Logo" class="h-10 hover:opacity-80 transition">
+    </a>
+    <div class="flex gap-3 text-sm">
+      <a href="https://chat.whatsapp.com/L9pViyD35Zq439t75avxq8" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-4 py-1 rounded-md">Join Grup</a>
+      <a href="https://sociabuzz.com/fiqaz/donate" target="_blank" class="bg-purple-600 hover:bg-purple-500 px-4 py-1 rounded-md">Sawer</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow px-6 py-10">
+    <h1 class="text-3xl font-bold mb-8 text-center tracking-wide">Selamat Datang di GameOnX</h1>
+
+    <div class="grid sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <a href="live.html" class="card bg-gray-900 rounded-xl p-6 text-center hover:bg-gray-800 shadow-md">
+        <h2 class="text-xl font-semibold mb-2">🔴 LIVE VOLLY</h2>
+        <p class="text-sm text-gray-300">Siaran Langsung Pertandingan.</p>
+      </a>
+
+      <a href="channel.html" class="card bg-gray-900 rounded-xl p-6 text-center hover:bg-gray-800 shadow-md">
+        <h2 class="text-xl font-semibold mb-2">CHANNEL SPORT</h2>
+        <p class="text-sm text-gray-300">Channel Olahraga.</p>
+      </a>
+    </div>
+  </main>
+
+  <!-- Donasi -->
+  <div class="flex justify-center mb-10 px-4">
+    <div class="bg-white p-4 rounded-lg shadow-md text-center">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://sociabuzz.com/fiqaz/support" alt="QR Donasi" class="mx-auto mb-3" />
+      <p class="text-black font-semibold">Support / Sawer</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center text-xs text-gray-500 py-4 bg-gray-950">
+    © 2025 GameOnX
+  </footer>
+</body>
+</html>
