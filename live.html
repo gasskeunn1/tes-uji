@@ -20,33 +20,27 @@
       background-color: #0f1014;
       color: white;
     }
-
     .glass-header {
       background: rgba(15, 16, 20, 0.8);
       backdrop-filter: blur(10px);
     }
-
     .channel-card {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
-
     .channel-card:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
       box-shadow: 0 0 20px rgba(255,255,255,0.1);
     }
-
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
     }
-
     .animate-pulse {
       animation: pulse 1s infinite;
     }
-
     #scrollTopBtn {
       display: none;
       position: fixed;
@@ -59,24 +53,15 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
       transition: opacity 0.3s ease;
     }
-
     #scrollTopBtn.show {
       display: block;
       opacity: 1;
-    }
-
-    /* Hilangkan garis putih video player */
-    video, .video-js, .vjs-tech {
-      border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
-      background-color: black !important;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- Tombol Scroll to Top -->
+  <!-- Scroll to top -->
   <button id="scrollTopBtn" onclick="scrollToTop()" class="hover:bg-gray-700">
     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
@@ -133,6 +118,7 @@
     © 2025 GameOnX
   </footer>
 
+  <!-- Script -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       fetch("data/channels.json")
@@ -174,10 +160,8 @@
             <img src="${channel.poster}" alt="${channel.title}" class="w-full rounded mb-2">
           </div>
           <h3 class="text-sm font-semibold mb-1">${channel.title}</h3>
-          <div class="mb-3">${showTime}</div>
-          <div class="mt-auto">
-            <button onclick="playChannel('${channel.src}', '${channel.poster}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-sm">Tonton</button>
-          </div>
+          <div class="mb-2">${showTime}</div>
+          <button onclick="playChannel('${channel.src}', '${channel.poster}')" class="block w-full bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-sm text-center">Tonton</button>
         `;
 
         container.appendChild(card);
@@ -195,39 +179,46 @@
       }) + " " + label;
     }
 
+    // VIDEO PLAYER
     let hls;
+    const video = document.getElementById("videoPlayer");
+
     function playChannel(url, poster) {
-      const video = document.getElementById("videoPlayer");
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
 
-      if (hls) hls.destroy();
-
-      hls = new Hls({
-        maxBufferLength: 30,
-        maxBufferSize: 60 * 1000 * 1000,
-        lowLatencyMode: true,
-        backBufferLength: 60,
-        maxLiveSyncPlaybackRate: 1.5,
-      });
+      hls = new Hls({ startPosition: -1, lowLatencyMode: true });
 
       hls.loadSource(url);
       hls.attachMedia(video);
       video.poster = poster;
       video.controls = true;
+      video.autoplay = true;
+      video.load();
 
-      hls.on(Hls.Events.ERROR, function (event, data) {
+      hls.on(Hls.Events.ERROR, function (_evt, data) {
         if (data.fatal) {
-          switch (data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              hls.startLoad();
-              break;
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              hls.recoverMediaError();
-              break;
-            default:
-              hls.destroy();
-              break;
+          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            hls.startLoad();
+          } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+            hls.recoverMediaError();
+          } else {
+            hls.destroy();
+            setTimeout(() => playChannel(url, poster), 3000);
           }
         }
+      });
+
+      video.addEventListener("stalled", () => {
+        hls.startLoad();
+        video.play();
+      });
+
+      video.addEventListener("ended", () => {
+        hls.startLoad();
+        video.play();
       });
 
       video.play();
