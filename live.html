@@ -20,24 +20,30 @@
       background-color: #0f1014;
       color: white;
     }
+
     .glass-header {
       background: rgba(15, 16, 20, 0.8);
       backdrop-filter: blur(10px);
     }
+
     .channel-card {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
     .channel-card:hover {
       transform: scale(1.05);
       box-shadow: 0 0 20px rgba(255,255,255,0.1);
     }
+
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
     }
+
     .animate-pulse {
       animation: pulse 1s infinite;
     }
+
     #scrollTopBtn {
       display: none;
       position: fixed;
@@ -50,9 +56,17 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
       transition: opacity 0.3s ease;
     }
+
     #scrollTopBtn.show {
       display: block;
       opacity: 1;
+    }
+
+    video, .video-js, .vjs-tech {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      background-color: black !important;
     }
   </style>
 </head>
@@ -140,7 +154,7 @@
 
       channels.forEach(channel => {
         const card = document.createElement("div");
-        card.className = "bg-gray-800 rounded-lg overflow-hidden p-3 channel-card shadow-md";
+        card.className = "bg-gray-800 rounded-lg overflow-hidden p-3 channel-card shadow-md flex flex-col";
 
         const showTime = channel.isLive
           ? `<span class="text-xs font-bold text-red-500 animate-pulse">🔴 LIVE</span>`
@@ -157,7 +171,9 @@
           </div>
           <h3 class="text-sm font-semibold mb-1">${channel.title}</h3>
           <div class="mb-2">${showTime}</div>
-          <button onclick="playChannel('${channel.src}', '${channel.poster}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-sm">Tonton</button>
+          <div class="mt-auto">
+            <button onclick="playChannel('${channel.src}', '${channel.poster}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-sm">Tonton</button>
+          </div>
         `;
 
         container.appendChild(card);
@@ -179,36 +195,12 @@
     function playChannel(url, poster) {
       const video = document.getElementById("videoPlayer");
       if (hls) hls.destroy();
-
       hls = new Hls();
       hls.loadSource(url);
       hls.attachMedia(video);
       video.poster = poster;
       video.controls = true;
       video.play();
-
-      // 🔁 Auto-reload saat error
-      hls.on(Hls.Events.ERROR, function (event, data) {
-        if (data.fatal) {
-          switch (data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              console.warn("Network error, trying to recover...");
-              hls.startLoad();
-              break;
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              console.warn("Media error, trying to recover...");
-              hls.recoverMediaError();
-              break;
-            default:
-              console.warn("Unrecoverable error, reloading stream...");
-              hls.destroy();
-              setTimeout(() => {
-                playChannel(url, poster);
-              }, 3000);
-              break;
-          }
-        }
-      });
     }
 
     function setQualityByHeight(height) {
